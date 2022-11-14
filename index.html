@@ -9,9 +9,15 @@
     </head>
     <body>
         <form id="dutch-pay-form">
-            <input type="text" placeholder="" />
+            <input id="pay" type="number" placeholder="총 금액을 입력해주세요" value="333333" required />
+            <br>
+            <input id="people-count" type="number" placeholder="인원 수를 입력해주세요" value="4" required />
+            <br>
+            <input id="calc" type="submit" value="더치페이 계산" />
         </form>
-        <ul></ul>
-        <script src="app.js"></script>
+        <div id="result">
+
+        </div>
+        <script src="js/dutch-pay.js"></script>
     </body>
 </html>
