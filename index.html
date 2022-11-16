@@ -11,17 +11,17 @@
         <form id="dutch-pay-form">
             <input id="pay" type="number" placeholder="총 금액을 입력해주세요" value="333333" required />
             <br>
+            <label for="is-cut-off">100원 절사 여부</label>
+            <input id="is-cut-off" type="checkbox" />
+            <br>
             <input id="people-count" type="number" placeholder="인원 수를 입력해주세요" value="4" required />
             <input id="people-btn" type="button" value="확인" />
-
             <br>
             <div id="people">
             </div>
             <input id="calc" type="submit" value="더치페이 계산" />
         </form>
         <div id="result">
-            * 인원 만큼 이름을 입력 받고 <br>
-            * 결과를 엑셀 형태로 제공할 것 그대로 복붙 가능하도록
         </div>
         <script src="js/dutch-pay.js"></script>
     </body>

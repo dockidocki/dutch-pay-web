@@ -1,11 +1,10 @@
 const dutchPayForm = document.getElementById("dutch-pay-form");
-const payInput = dutchPayForm.querySelector("#pay");
+const totalPayInput = dutchPayForm.querySelector("#pay");
 const peopleCountInput = dutchPayForm.querySelector("#people-count");
 const peopleButton = dutchPayForm.querySelector("#people-btn");
 const peopleDiv = dutchPayForm.querySelector("#people");
+const isCutOffCheckBox = dutchPayForm.querySelector("#is-cut-off");
 const result = document.querySelector("#result");
-
-const peopleList = [];
 
 const onClickPeopleCount = () => {
     peopleDiv.innerText = '인원들의 이름을 입력해주세요';
@@ -29,11 +28,18 @@ const onSubmitCalculate = (e) => {
         return;
     }
 
-    let dutchPayObj = calculateDutchPay(payInput.value, peopleCountInput.value, 100);
+    const isCutOff = isCutOffCheckBox.checked;
 
-    result.innerText =
-        `인당 ${dutchPayObj.cutOffResultAmount}원 씩 내시고, 
-        한 명은 ${dutchPayObj.financierAmount}원(절사 금액 포함 : ${dutchPayObj.cutOffDiffAmount}) 내세요`;
+    let cutOffAmount = isCutOff ? 100 : 0;
+
+    let dutchPayObj = calculateDutchPay(totalPayInput.value, peopleCountInput.value, cutOffAmount);
+
+    result.innerText = `인당 ${dutchPayObj.resultAmount}원 씩 내야해요
+        ${
+            isCutOff ?
+            `한 명은 ${dutchPayObj.financierAmount}원(절사 금액 포함 : ${dutchPayObj.cutOffDiffAmount}) 내야합니다` :
+            ''
+        }`;
 
     result.appendChild(document.createElement('br'));
     let tableElement = document.createElement('table');
@@ -56,25 +62,37 @@ const onSubmitCalculate = (e) => {
         if (i === 0) {
             td2.innerText = String(dutchPayObj.financierAmount);
         } else {
-            td2.innerText = String(dutchPayObj.cutOffResultAmount);
+            td2.innerText = String(dutchPayObj.resultAmount);
         }
         tableElement.appendChild(td2);
     }
-
 }
 
 const calculateDutchPay = (totalPay, peopleCount, cutOffAmount) => {
-    let cutOffPayValue = Math.floor(payInput.value / cutOffAmount) * cutOffAmount;
-    let cutOffDiff = payInput.value - cutOffPayValue;
-    let calcResult = cutOffPayValue / peopleCount;
-    let cutOffResult = Math.floor(calcResult / cutOffAmount) * cutOffAmount;
+    let cutOffPayValue;
+    if (cutOffAmount > 0) {
+        cutOffPayValue = Math.floor(totalPay / cutOffAmount) * cutOffAmount;
+    } else {
+        cutOffPayValue = totalPay;
+    }
 
-    cutOffDiff += (calcResult - cutOffResult) * peopleCount;
+    let cutOffDiffAmount = totalPay - cutOffPayValue;
+    let calcResult = cutOffPayValue / peopleCount;
+
+    let cutOffResultAmount;
+
+    if (cutOffAmount > 0) {
+        cutOffResultAmount = Math.floor(calcResult / cutOffAmount) * cutOffAmount;
+    } else {
+        cutOffResultAmount = 0;
+    }
+
+    cutOffDiffAmount += (calcResult - cutOffResultAmount) * peopleCount;
 
     return {
-        cutOffResultAmount: cutOffResult,
-        financierAmount: cutOffResult + cutOffDiff,
-        cutOffDiffAmount: cutOffDiff
+        resultAmount: cutOffAmount > 0 ? cutOffResultAmount : calcResult,
+        financierAmount: cutOffAmount > 0 ? cutOffResultAmount + cutOffDiffAmount : calcResult,
+        cutOffDiffAmount
     }
 }
 
