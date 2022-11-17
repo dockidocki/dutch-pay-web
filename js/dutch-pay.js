@@ -7,6 +7,7 @@ const isCutOffCheckBox = dutchPayForm.querySelector("#is-cut-off");
 const result = document.querySelector("#result");
 
 let dutchPayObj = {};
+let resultText = null;
 
 const onClickPeopleCount = () => {
     peopleDiv.innerText = '인원들의 이름을 입력해주세요';
@@ -35,7 +36,7 @@ const onSubmitCalculate = (e) => {
 
     dutchPayObj = calculateDutchPay(totalPayInput.value, peopleCountInput.value, cutOffAmount);
 
-    let resultText = `인당 ${dutchPayObj.resultAmount}원 씩 내야해요`;
+    resultText = `인당 ${dutchPayObj.resultAmount}원 씩 내야해요`;
     resultText += isCutOff ?
         `\n한 명은 ${dutchPayObj.financierAmount}원(절사 금액 포함 : ${dutchPayObj.cutOffDiffAmount}) 내야합니다` :
         '';
