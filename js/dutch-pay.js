@@ -6,6 +6,8 @@ const peopleDiv = dutchPayForm.querySelector("#people");
 const isCutOffCheckBox = dutchPayForm.querySelector("#is-cut-off");
 const result = document.querySelector("#result");
 
+let dutchPayObj = {};
+
 const onClickPeopleCount = () => {
     peopleDiv.innerText = '인원들의 이름을 입력해주세요';
     peopleDiv.appendChild(document.createElement('br'));
@@ -21,8 +23,7 @@ const onClickPeopleCount = () => {
 const onSubmitCalculate = (e) => {
     e.preventDefault();
 
-    let peopleInputs = peopleDiv.getElementsByTagName('input');
-
+    const peopleInputs = peopleDiv.getElementsByTagName('input');
     if (peopleInputs.length <= 0) {
         alert("인원 이름들을 입력하세요!");
         return;
@@ -32,14 +33,30 @@ const onSubmitCalculate = (e) => {
 
     let cutOffAmount = isCutOff ? 100 : 0;
 
-    let dutchPayObj = calculateDutchPay(totalPayInput.value, peopleCountInput.value, cutOffAmount);
+    dutchPayObj = calculateDutchPay(totalPayInput.value, peopleCountInput.value, cutOffAmount);
 
-    result.innerText = `인당 ${dutchPayObj.resultAmount}원 씩 내야해요
-        ${
-            isCutOff ?
-            `한 명은 ${dutchPayObj.financierAmount}원(절사 금액 포함 : ${dutchPayObj.cutOffDiffAmount}) 내야합니다` :
-            ''
-        }`;
+    let resultText = `인당 ${dutchPayObj.resultAmount}원 씩 내야해요`;
+    resultText += isCutOff ?
+        `\n한 명은 ${dutchPayObj.financierAmount}원(절사 금액 포함 : ${dutchPayObj.cutOffDiffAmount}) 내야합니다` :
+        '';
+
+    result.innerText = resultText;
+
+    if (isCutOff) {
+        let isRandomCheckBox = document.createElement('input');
+        isRandomCheckBox.id = 'is-random'
+        isRandomCheckBox.type = 'checkbox';
+        result.appendChild(isRandomCheckBox);
+    }
+    printPeoplePayTable();
+}
+
+// const onClickRandomFinancier = () => {
+//
+// }
+
+const printPeoplePayTable = () => {
+    const peopleInputs = peopleDiv.getElementsByTagName('input');
 
     result.appendChild(document.createElement('br'));
     let tableElement = document.createElement('table');
