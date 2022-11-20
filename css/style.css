@@ -1,8 +1,17 @@
+.hidden {
+    display: none;
+}
+
+.hidden-another {
+    display: none;
+}
+
 table {
     width: 30%;
     border: 1px solid #444444;
     border-collapse: collapse;
 }
+
 th, td {
     border: 1px solid #444444;
 }
