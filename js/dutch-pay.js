@@ -10,6 +10,8 @@ const selectPayDiv = resultTextDiv.querySelector("#select-pay-div");
 
 const whoSelectPay = document.querySelector("#select-pay");
 
+const copyButton = document.querySelector("#dutch-pay-copy");
+
 const HIDDEN_CLASS_NAME = "hidden";
 
 let dutchPayObj = {};
@@ -55,6 +57,8 @@ const onSubmitCalculate = (e) => {
     if (isCutOff) {
         printSelectPay();
     }
+
+    copyButton.classList.remove(HIDDEN_CLASS_NAME);
 }
 
 const printSelectPay = () => {
@@ -172,7 +176,14 @@ const calculateDutchPay = (totalPay, peopleCount, cutOffAmount) => {
     }
 }
 
+const onClickCopy = () => {
+    window.getSelection().selectAllChildren(document.getElementById("result-table"));
+    document.execCommand("Copy");
+    alert("복사되었습니다");
+}
+
 dutchPayForm.addEventListener("submit", onSubmitCalculate);
 peopleButton.addEventListener("click", onClickPeopleCount)
 
 whoSelectPay.addEventListener("change", onChangePay);
+copyButton.addEventListener("click", onClickCopy);
