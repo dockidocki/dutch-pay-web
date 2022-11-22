@@ -8,13 +8,9 @@ const result = document.querySelector("#result");
 const resultTextDiv = document.querySelector("#result-text-div");
 const selectPayDiv = resultTextDiv.querySelector("#select-pay-div");
 
-const whoPaySelects = document.getElementsByClassName("select-pay");
-const whoPayDiv = document.querySelector("#who-pay-div");
-const whoPayButton = whoPayDiv.querySelector("#who-pay-btn");
-
+const whoSelectPay = document.querySelector("#select-pay");
 
 const HIDDEN_CLASS_NAME = "hidden";
-const ANOTHER_HIDDEN_CLASS_NAME = "hidden-another";
 
 let dutchPayObj = {};
 let resultText = null;
@@ -55,29 +51,26 @@ const onSubmitCalculate = (e) => {
     resultTextDiv.innerText = resultText;
     resultTextDiv.appendChild(selectPayDiv);
 
+    printPeoplePayTable();
     if (isCutOff) {
         printSelectPay();
     }
-    printPeoplePayTable();
 }
 
 const printSelectPay = () => {
+    for (let i = 0; i < inputPeople.length; i++) {
+        let optionElement = document.createElement('option');
+        optionElement.value = inputPeople[i].name;
+        optionElement.innerText = inputPeople[i].name;
+        whoSelectPay.appendChild(optionElement);
+    }
     selectPayDiv.classList.remove(HIDDEN_CLASS_NAME);
 }
 
-const onClickSelectPay = (e) => {
-    if (e.target.value === 'another') {
-        whoPayDiv.classList.remove(ANOTHER_HIDDEN_CLASS_NAME);
-    } else {
-        whoPayDiv.classList.add(ANOTHER_HIDDEN_CLASS_NAME);
-    }
-}
-
-const onClickSelectPayPerson = () => {
-    let whoPayInput = whoPayDiv.querySelector("#who-pay");
-
+const onChangePay = () => {
+    const selectedValue = whoSelectPay.options[whoSelectPay.selectedIndex].value;
     for (let i = 0; i < inputPeople.length; i++) {
-        if (inputPeople[i].name === whoPayInput.value &&
+        if (inputPeople[i].name === selectedValue &&
             inputPeople[i].isFinancier === false) {
 
             for (let j = 0; j < inputPeople.length; j++) {
@@ -182,8 +175,4 @@ const calculateDutchPay = (totalPay, peopleCount, cutOffAmount) => {
 dutchPayForm.addEventListener("submit", onSubmitCalculate);
 peopleButton.addEventListener("click", onClickPeopleCount)
 
-for (const select of whoPaySelects) {
-    select.addEventListener("click", onClickSelectPay);
-}
-
-whoPayButton.addEventListener("click", onClickSelectPayPerson);
+whoSelectPay.addEventListener("change", onChangePay);
